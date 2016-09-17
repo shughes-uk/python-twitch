@@ -19,6 +19,7 @@ class TestApiV3Root(unittest.TestCase):
                 u'teams': u'https://api.twitch.tv/kraken/teams',
                 u'user': u'https://api.twitch.tv/kraken/user'
             },
+            u'identified': True,
             u'token': {
                 u'authorization': None,
                 u'valid': False
@@ -156,7 +157,7 @@ class TestApiV3Videos(unittest.TestCase):
                   u'_links', u'fps', u'broadcast_id', u'broadcast_type',
                   u'preview', u'resolutions', u'_id', u'created_at',
                   u'channel']
-    test_video = 'c6055863'
+    test_video = 'v77655920'
 
     def test_by_name(self):
         result = twitch.videos.by_id(self.test_video).keys()
@@ -174,7 +175,8 @@ class TestApiV3Videos(unittest.TestCase):
 
 
 class TestApiV3Games(unittest.TestCase):
-    game_keys = [u'name', u'box', u'logo', u'_links', u'_id', u'giantbomb_id']
+    game_keys = [u'name', u'box', u'logo', u'_links', u'_id',
+                 u'giantbomb_id', u'popularity']
 
     def test_top(self):
         result = twitch.games.top().get('top')[0].get('game')
@@ -191,12 +193,12 @@ class TestApiV3Search(unittest.TestCase):
         result = twitch.search.streams('starcraft').get('streams')[0].keys()
         expected =  [u'is_playlist', u'preview', u'created_at',
                      u'video_height', u'game', u'_links', u'channel',
-                     u'average_fps', u'_id', u'viewers']
+                     u'average_fps', u'_id', u'viewers', u'delay']
         six.assertCountEqual(self, result, expected)
 
     def test_games(self):
         result = twitch.search.games('starcraft').get('games')[0].keys()
-        six.assertCountEqual(self, result, TestApiV3Games.game_keys + [u'popularity'])
+        six.assertCountEqual(self, result, TestApiV3Games.game_keys)
 
 
 class TestApiV3Follows(unittest.TestCase):
@@ -289,7 +291,7 @@ class TestApiV3Ingests(unittest.TestCase):
 
     def test_ingests(self):
         r = twitch.ingests.get()['ingests']
-        self.assertGreaterEqual(len(r), 26)
+        self.assertGreaterEqual(len(r), 10)
 
 
 class TestApiV3Subscriptions(unittest.TestCase):
